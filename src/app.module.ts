@@ -7,6 +7,8 @@ import { join } from 'path';
 import { TicketModule } from './ticket/ticket.module';
 import { HealthCheckModule } from './healthcheck/healthcheck.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import { TypeOrmModule } from '@nestjs/typeorm';
+require('dotenv').config();
 
 @Module({
   imports: [
@@ -18,8 +20,15 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
        ApolloServerPluginLandingPageLocalDefault()
       ]
     }),
+    TypeOrmModule.forRoot({
+      port:26257,
+      type:"postgres",
+      url: process.env.DATABASE_URL,
+      entities: [__dirname + '/../**/*.entity.{js,ts}'],
+      synchronize:true
+    }),
     TicketModule,
-    HealthCheckModule,
+    HealthCheckModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Ticket {
+  id: String!
+  title: String!
+  description: String!
+  priority: String!
+  category: String!
+  status: String!
+}
+
 type Query {
   """Hola mundo"""
-  helloworld: String!
+  hello_world: String!
+
+  """Hola to (name)"""
+  hello_to(to: String): String!
+  findAll: [Ticket!]!
+  createTicket: Ticket!
 }

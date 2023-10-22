@@ -9,13 +9,13 @@ export class HealthCheckController {
 
   @Get('')
   async getHealth(): Promise<any> {
-    return this.healthCheckService.getStates();
+    return this.healthCheckService.getAllStatus();
   }
 
   @Get('/:id')
   async getHealthWithId(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<any> {
-    return this.healthCheckService.getStateById(id);
+    return this.healthCheckService.getStatusById(id);
   }
 }
