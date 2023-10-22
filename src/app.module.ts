@@ -24,7 +24,7 @@ require('dotenv').config();
       port:26257,
       type:"postgres",
       url: process.env.DATABASE_URL,
-      entities: [__dirname + '/../**/*.entity.{js,ts}'],
+      entities:[__dirname + "/**/*.entity{.ts,.js}"],
       synchronize:true
     }),
     TicketModule,
