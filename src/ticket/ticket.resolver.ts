@@ -1,11 +1,12 @@
-import { Args, Parent, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Ticket } from './ticket.entity';
 import { TicketService } from './ticket.service';
 import { Body } from '@nestjs/common';
+import { CreateTicketInput } from './dto/create-ticket.input';
 
 @Resolver()
 export class TicketResolver {
-    constructor(private readonly ticketService: TicketService) {}
+  constructor(private readonly ticketService: TicketService) {}
 
   @Query(() => String, { description: 'Hola mundo', name: 'hello_world' })
   helloWorld(): string {
@@ -23,11 +24,8 @@ export class TicketResolver {
     return this.ticketService.findAll();
   }
 
-  @Query(()=> Ticket)
-  createTicket(
-    @Parent() ticket: Ticket
-    // @Body('ticket', { nullable: false, type: () => Ticket }) ticket: Ticket,
-  ) {
-    this.ticketService.createTicket(ticket);
+  @Mutation(() => Ticket)
+  createPost(@Args('ticketInput') ticketInput: CreateTicketInput) {
+    return this.ticketService.createTicket(ticketInput);
   }
 }

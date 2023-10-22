@@ -3,12 +3,31 @@
 # ------------------------------------------------------
 
 type Ticket {
-  id: String!
+  id: ID!
   title: String!
   description: String!
-  priority: String!
-  category: String!
-  status: String!
+  priority: PriorityEnum!
+  category: CategoryEnum!
+  status: StatusEnum!
+}
+
+enum PriorityEnum {
+  high
+  medium
+  low
+}
+
+enum CategoryEnum {
+  incident
+  support
+  error
+}
+
+enum StatusEnum {
+  pending
+  verified
+  approved
+  rejected
 }
 
 type Query {
@@ -18,5 +37,15 @@ type Query {
   """Hola to (name)"""
   hello_to(to: String): String!
   findAll: [Ticket!]!
-  createTicket: Ticket!
+}
+
+type Mutation {
+  createPost(ticketInput: CreateTicketInput!): Ticket!
+}
+
+input CreateTicketInput {
+  title: String!
+  description: String
+  priority: PriorityEnum!
+  category: CategoryEnum!
 }

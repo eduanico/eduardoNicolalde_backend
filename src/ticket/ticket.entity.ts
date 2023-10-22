@@ -1,11 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { StatusEnum } from './enums/status.enum';
+import { CategoryEnum } from './enums/category.enum';
+import { PriorityEnum } from './enums/priority.enum';
 
-@ObjectType()
+@ObjectType('Ticket')
 @Entity()
 export class Ticket {
-  @PrimaryGeneratedColumn()
-  @Field(() => String)
+  @Field(() => ID)
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -17,33 +20,14 @@ export class Ticket {
   description: string;
 
   @Column()
-  @Field(() => String)
+  @Field(() => PriorityEnum)
   priority: PriorityEnum;
 
   @Column()
-  @Field(() => String)
+  @Field(() => CategoryEnum)
   category: CategoryEnum;
 
   @Column()
-  @Field(() => String)
+  @Field(() => StatusEnum)
   status: StatusEnum;
-}
-
-enum StatusEnum {
-  "pending",
-  "verified",
-  "approved",
-  "rejected",
-}
-
-enum PriorityEnum {
-  "high",
-  "medium",
-  "low",
-}
-
-enum CategoryEnum {
-  "incident",
-  "support",
-  "error",
 }
