@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Client } from 'pg';
-import { HealthcheckDTO } from 'src/healthcheck/heatlhcheckDTO.class';
+import { StatusDTO } from 'src/status/status.class';
 require('dotenv').config();
 
 @Injectable()
-export class HealthCheckService {
+export class StatusService {
   getAllStatus = async () => {
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
@@ -13,9 +13,9 @@ export class HealthCheckService {
     try {
       await client.connect();
       let result = await client.query('SELECT * FROM healthcheck').then((res) => {
-        let array = new Array<HealthcheckDTO>();
+        let array = new Array<StatusDTO>();
         for (let n = 0; n < res.rows.length; n++) {
-          let healthcheckDTO = new HealthcheckDTO();
+          let healthcheckDTO = new StatusDTO();
           healthcheckDTO.id = parseInt(res.rows[n].id);
           healthcheckDTO.status = parseInt(res.rows[n].state);
           array.push(healthcheckDTO);
@@ -34,7 +34,7 @@ export class HealthCheckService {
       connectionString: process.env.DATABASE_URL,
       application_name: '$ eduanico_app',
     });
-    let healthcheckDTO = new HealthcheckDTO();
+    let statusDTO = new StatusDTO();
   
     try {
       await client.connect();
@@ -42,21 +42,21 @@ export class HealthCheckService {
         .query('SELECT * FROM healthcheck WHERE id = ' + id)
         .then((res) => {
           if(res.rows[0]) {
-            healthcheckDTO.id = id;
-            healthcheckDTO.status = parseInt(res.rows[0].state);
-            return healthcheckDTO;
+            statusDTO.id = id;
+            statusDTO.status = parseInt(res.rows[0].state);
+            return statusDTO;
           }
-          healthcheckDTO.id = id;
-          healthcheckDTO.status = 607;
-          return healthcheckDTO;
+          statusDTO.id = id;
+          statusDTO.status = 607;
+          return statusDTO;
         });
       await client.end();
       return result;
     } catch (err) {
       console.log(`error connecting: ${err}`);
-      healthcheckDTO.id = id;
-      healthcheckDTO.status = 607;
-      return healthcheckDTO;
+      statusDTO.id = id;
+      statusDTO.status = 607;
+      return statusDTO;
     }
   };
 }

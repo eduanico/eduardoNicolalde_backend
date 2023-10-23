@@ -14,7 +14,7 @@ export class CreateTicketInput {
 
   @Field({ nullable: true })
   @MaxLength(150, {
-    message: 'Descripción excede el límite aceptado de 150',s
+    message: 'Descripción excede el límite aceptado de 150',
   })
   description?: string;
 

@@ -9,14 +9,13 @@ export const initDb = (async () => {
   const statements = [
     // Clear any existing data
     'DROP TABLE IF EXISTS healthcheck',
-    'DROP TABLE IF EXISTS ticket',
 
     // CREATE the healthchecks table
-    // 'CREATE TABLE healthcheck (id INT NOT NULL, state INT NULL)',
+    'CREATE TABLE healthcheck (id INT NOT NULL, state INT NULL)',
     // INSERT a row into the healthchecks table
-    // 'INSERT INTO healthcheck (id, state) VALUES (1,604)',
-    // 'INSERT INTO healthcheck (id, state) VALUES (2,606)',
-    // 'INSERT INTO healthcheck (id, state) VALUES (3,607)',
+    'INSERT INTO healthcheck (id, state) VALUES (1,604)',
+    'INSERT INTO healthcheck (id, state) VALUES (2,606)',
+    'INSERT INTO healthcheck (id, state) VALUES (3,607)',
     // SELECT a row from the healthchecks table
     'SELECT * FROM healthcheck',
   ];
@@ -38,5 +37,3 @@ export const initDb = (async () => {
     console.log(`error connecting: ${err}`);
   }
 })().catch((err) => console.log(err.stack));
-
-

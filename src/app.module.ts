@@ -5,7 +5,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { TicketModule } from './ticket/ticket.module';
-import { HealthCheckModule } from './healthcheck/healthcheck.module';
+import { StatusModule } from './status/status.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { TypeOrmModule } from '@nestjs/typeorm';
 require('dotenv').config();
@@ -28,7 +28,7 @@ require('dotenv').config();
       // synchronize:true
     }),
     TicketModule,
-    HealthCheckModule
+    StatusModule
   ],
   controllers: [AppController],
   providers: [AppService],

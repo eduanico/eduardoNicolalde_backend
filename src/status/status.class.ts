@@ -1,5 +1,5 @@
 
-export class HealthcheckDTO {
+export class StatusDTO {
   id: number;
   status: number;
 }
