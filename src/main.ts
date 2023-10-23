@@ -32,7 +32,7 @@ async function bootstrap() {
     .setTitle('Api documentation')
     .setDescription('APIs for banco pichincha test')
     .setVersion('1.0')
-    .addTag('tickets')
+    .addTag('Banco Pichincha API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/documentation', app, document);

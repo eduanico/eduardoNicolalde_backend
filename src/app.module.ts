@@ -9,6 +9,7 @@ import { StatusModule } from './status/status.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KafkaModule } from './kafka/kafka.module';
+import { FileReaderModule } from './file-reader/file-reader.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -30,6 +31,7 @@ require('dotenv').config();
     TicketModule,
     StatusModule,
     KafkaModule,
+    FileReaderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

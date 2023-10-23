@@ -8,8 +8,10 @@ import {
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { KafkaService } from './kafka.service';
 import { UpdateDTO } from './dto/updateDto.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('api')
+@ApiTags('status')
 export class KafkaController {
   constructor(private readonly kafkaService: KafkaService) {}
 
