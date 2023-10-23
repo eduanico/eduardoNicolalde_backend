@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
   ValidationPipe,
+  ParseFilePipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
@@ -44,9 +45,19 @@ export class FileReaderController {
     )
     file: Express.Multer.File,
   ) {
+    //Validar que el archivo no esté vacío
+    if (file.size == 1) {
+      console.log('file must not be empty');
+      return;
+    }
     const csv = this.fileReaderService.getFileFromFileName(file.originalname);
     const content = this.fileReaderService.extractContentToString(csv);
     const parsedCsv = this.fileReaderService.parseCsvContent(content);
+    console.log(parsedCsv);
+    //Validar que el archivo no esté vacío
+    if (parsedCsv.length == 1) {
+      console.log('file have no rows');
+    }
     this.fileReaderService.validateData(parsedCsv);
   }
 

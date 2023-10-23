@@ -1,13 +1,10 @@
 import {
   IsDate,
-  IsEnum,
   IsNumber,
   IsString,
   MaxLength,
   IsNotEmpty,
 } from 'class-validator';
-import { AccountEnum } from './enums/account.enum';
-import { FileStatusEnum } from './enums/fileStatus.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('data')
@@ -22,13 +19,10 @@ export class Data {
   @IsNotEmpty()
   balance: number;
 
-  @IsEnum(AccountEnum)
-  @Column({
-    type: 'enum',
-    enum: AccountEnum,
-  })
+  @Column()
   @IsNotEmpty()
-  account: AccountEnum;
+  @IsString()
+  account: string;
 
   @IsString()
   @Column()
@@ -38,13 +32,10 @@ export class Data {
   })
   description: string;
 
-  @IsEnum(FileStatusEnum)
-  @Column({
-    type: 'enum',
-    enum: FileStatusEnum,
-  })
+  @Column()
   @IsNotEmpty()
-  status: FileStatusEnum;
+  @IsString()
+  status: string;
 
   @IsDate()
   @Column()

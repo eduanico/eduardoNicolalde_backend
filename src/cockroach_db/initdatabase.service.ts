@@ -12,9 +12,13 @@ export const initDb = (async () => {
     'DROP TABLE IF EXISTS ticket',
     'DROP TABLE IF EXISTS data',
     // CREATE the healthchecks table
-    'CREATE TABLE healthcheck (id INT8 NOT NULL, state INT NULL), CONSTRAINT "PK_2533602bd9247937e3a4861e174" PRIMARY KEY (id ASC))',
-    // 'CREATE TABLE public.data (id INT8 NOT NULL DEFAULT unique_rowid(),balance FLOAT8 NOT NULL,account banco_pichincha.public.data_account_enum NOT NULL,description VARCHAR NOT NULL,status banco_pichincha.public.data_status_enum NOT NULL,date TIMESTAMP NOT NULL,CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY (id ASC))',
-    // INSERT a row into the healthchecks table
+    'CREATE TABLE public.healthcheck (id INT8 NOT NULL,state INT8 NULL,rowid INT8 NOT VISIBLE NOT NULL DEFAULT unique_rowid(),CONSTRAINT healthcheck_pkey PRIMARY KEY (rowid ASC))',
+
+    //CREATE DATA TABLE
+    'CREATE TABLE public.data (id INT8 NOT NULL DEFAULT unique_rowid(),balance FLOAT8 NOT NULL,account VARCHAR NOT NULL,description VARCHAR NOT NULL, status VARCHAR NOT NULL,date TIMESTAMP NOT NULL,CONSTRAINT "PK_2533602bd9247937e3a4861e173" PRIMARY KEY (id ASC))',
+
+    // CREATE TICKET TABLE
+    'CREATE TABLE public.ticket (id INT8 NOT NULL DEFAULT unique_rowid(),title VARCHAR NOT NULL,description VARCHAR NOT NULL,priority VARCHAR NOT NULL,category VARCHAR NOT NULL,status VARCHAR NOT NULL,"createdAt" TIMESTAMP NOT NULL DEFAULT now():::TIMESTAMP,CONSTRAINT "PK_d9a0835407701eb86f874474b7c" PRIMARY KEY (id ASC))',
     'INSERT INTO healthcheck (id, state) VALUES (1,604)',
     'INSERT INTO healthcheck (id, state) VALUES (2,606)',
     'INSERT INTO healthcheck (id, state) VALUES (3,607)',
