@@ -23,6 +23,7 @@ export class FileReaderService {
   parseCsvContent(content: string): Data[] {
     const parsedCsv = parse(content, {
       header: true,
+      skipEmptyLines: true,
     });
     const items: Data[] = [];
     parsedCsv.data.map((item: Data) => {
