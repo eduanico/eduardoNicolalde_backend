@@ -9,6 +9,7 @@ type Ticket {
   priority: PriorityEnum!
   category: CategoryEnum!
   status: StatusEnum!
+  createdAt: DateTime!
 }
 
 enum PriorityEnum {
@@ -30,9 +31,25 @@ enum StatusEnum {
   rejected
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   findAll: [Ticket!]!
-  findTicketById(id: String!): Ticket!
+  findTicket(id: String!): Ticket!
+  searchTickets(args: TicketFilterDTO!): [Ticket!]!
+}
+
+input TicketFilterDTO {
+  start: DateTime
+  end: DateTime
+  priority: PriorityEnum
+  category: CategoryEnum
+  status: StatusEnum
+  skip: Int = 0
+  limit: Int = 10
 }
 
 type Mutation {

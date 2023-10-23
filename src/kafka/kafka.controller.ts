@@ -13,12 +13,14 @@ export class KafkaController {
     private readonly kafkaService: KafkaService    
     ) {}
 
+    //ejercicio 2
   @MessagePattern('technical_support_tickets')
-  updateStatus(@Payload() payload: UpdateDTO): any {
-    console.log(payload);
-    return this.kafkaService.updateStatus(payload);
+  updateStatus(@Payload() @Body() updateDto: UpdateDTO): any {
+    console.log(updateDto);
+    return this.kafkaService.updateStatus(updateDto);
   }
 
+  //ejercicio 2
   @Post('/status')
   @UsePipes(new ValidationPipe({skipMissingProperties: true}))
   @UsePipes(new ValidationPipe({forbidNonWhitelisted: true, whitelist: true, transform: true}))

@@ -2,6 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Ticket } from './ticket.entity';
 import { TicketService } from './ticket.service';
 import { CreateTicketInput } from './dto/create-ticket.input';
+import { TicketFilterDTO } from './dto/ticket-filter.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Resolver()
 export class TicketResolver {
@@ -12,13 +14,29 @@ export class TicketResolver {
     return this.ticketService.findAll();
   }
 
-  @Query(() => Ticket)
-  findTicketById(@Args('id', { type: () => String }) id: string) {
-    return this.ticketService.findTicketById(id);
-  }
-
+  //ejercicio 2
   @Mutation(() => Ticket)
   createPost(@Args('ticketInput') ticketInput: CreateTicketInput) {
     return this.ticketService.createTicket(ticketInput);
+  }
+
+  //ejercicio 3
+  @Query(() => Ticket)
+  async findTicket(@Args('id', { type: () => String }) id: string) {
+    return await this.ticketService.findTicketById(id).catch((err) => {
+      console.log(err);
+      throw new HttpException(
+        {
+          message: err.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    });
+  }
+
+  //ejercicio 4
+  @Query(() => [Ticket])
+  searchTickets(@Args('args') args: TicketFilterDTO) {
+    return this.ticketService.findByFilters(args);
   }
 }
