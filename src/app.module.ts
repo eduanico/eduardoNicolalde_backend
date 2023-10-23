@@ -6,9 +6,10 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { TicketModule } from './ticket/ticket.module';
 import { StatusModule } from './status/status.module';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KafkaModule } from './kafka/kafka.module';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 @Module({
@@ -17,20 +18,18 @@ require('dotenv').config();
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
-      plugins: [
-       ApolloServerPluginLandingPageLocalDefault()
-      ]
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     TypeOrmModule.forRoot({
-      port:26257,
-      type:"postgres",
+      port: 26257,
+      type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities:[__dirname + "/**/*.entity{.ts,.js}"],
-      // synchronize:true
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // synchronize: true,
     }),
     TicketModule,
     StatusModule,
-    KafkaModule
+    KafkaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,22 +13,22 @@ type Ticket {
 }
 
 enum PriorityEnum {
-  high
-  medium
-  low
+  HIGH
+  MEDIUM
+  LOW
 }
 
 enum CategoryEnum {
-  incident
-  support
-  error
+  INCIDENT
+  SUPPORT
+  ERROR
 }
 
 enum StatusEnum {
-  pending
-  verified
-  approved
-  rejected
+  PENDING
+  VERIFIED
+  APPROVED
+  REJECTED
 }
 
 """

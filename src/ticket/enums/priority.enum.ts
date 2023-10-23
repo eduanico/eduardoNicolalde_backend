@@ -1,12 +1,12 @@
-import { ObjectType, registerEnumType } from "@nestjs/graphql";
+import { ObjectType, registerEnumType } from '@nestjs/graphql';
 
-ObjectType()
+ObjectType();
 export enum PriorityEnum {
-  high,
-  medium,
-  low,
+  HIGH = 'high',
+  MEDIUM = 'medium',
+  LOW = 'low',
 }
 
 registerEnumType(PriorityEnum, {
-    name: 'PriorityEnum',
-  });
+  name: 'PriorityEnum',
+});

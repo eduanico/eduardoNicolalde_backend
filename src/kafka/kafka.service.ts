@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { StatusEnum } from 'src/ticket/enums/status.enum';
-import { UpdateDTO } from './dto/updateDTO';
+import { UpdateDTO } from './dto/updateDto.dto';
 import { TicketService } from 'src/ticket/ticket.service';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class KafkaService {
       updateDto,
     });
   }
-   updateStatus(payload: UpdateDTO): any {
-    return  this.ticketService.updateStatus(payload);
+  updateStatus(payload: UpdateDTO): any {
+    return this.ticketService.updateStatus(payload);
   }
 }

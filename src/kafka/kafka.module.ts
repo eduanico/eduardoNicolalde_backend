@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { KafkaController } from './kafka.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KafkaService } from './kafka.service';
-import { TicketService } from 'src/ticket/ticket.service';
 import { TicketModule } from 'src/ticket/ticket.module';
 
 @Module({
@@ -25,7 +24,7 @@ import { TicketModule } from 'src/ticket/ticket.module';
         },
       },
     ]),
-    TicketModule
+    TicketModule,
   ],
   controllers: [KafkaController],
   providers: [KafkaService],

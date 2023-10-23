@@ -24,6 +24,7 @@ async function bootstrap() {
           password:
             'Dh3gY+CAcTdWPZlhIXirDsLHrzl4DSnnPaMA+NEN3d5sT8u6yJpuZFqc28VpfIeN',
         },
+        connectionTimeout: 45000,
       },
     },
   } as MicroserviceOptions);

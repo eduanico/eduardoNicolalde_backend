@@ -1,13 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Ticket } from './ticket.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository, MoreThan } from 'typeorm';
 import { CreateTicketInput } from './dto/create-ticket.input';
 import { CategoryEnum } from './enums/category.enum';
 import { StatusEnum } from './enums/status.enum';
-import { UpdateDTO } from 'src/kafka/dto/updateDTO';
 import { TicketFilterDTO } from './dto/ticket-filter.dto';
-import { NotFoundError } from 'rxjs';
+import { UpdateDTO } from 'src/kafka/dto/updateDto.dto';
+import path from 'path';
 
 @Injectable()
 export class TicketService {
@@ -16,14 +16,14 @@ export class TicketService {
     private ticketRepository: Repository<Ticket>,
   ) {}
 
-  async updateStatus(updateDTO: UpdateDTO): Promise<any> {
+  async updateStatus(payload: UpdateDTO): Promise<any> {
     try {
       const updateRes = await this.ticketRepository.update(
         {
-          id: updateDTO.id,
+          id: payload.id,
         },
         {
-          status: updateDTO.status,
+          status: payload.status,
         },
       );
       console.log('respuesta del update: ', updateRes);
@@ -46,17 +46,18 @@ export class TicketService {
 
     let pathParam;
     switch (ticket.category) {
-      case CategoryEnum.incident:
+      case CategoryEnum.INCIDENT:
         pathParam = 1;
         break;
-      case CategoryEnum.support:
+      case CategoryEnum.SUPPORT:
         pathParam = 2;
         break;
-      case CategoryEnum.error:
+      case CategoryEnum.ERROR:
         pathParam = 3;
         break;
     }
-    newTicket.status = StatusEnum.pending;
+    console.log(pathParam);
+    newTicket.status = StatusEnum.PENDING;
     //send pathparam to api-fake
 
     return this.ticketRepository.save(newTicket);
