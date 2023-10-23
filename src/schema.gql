@@ -31,12 +31,8 @@ enum StatusEnum {
 }
 
 type Query {
-  """Hola mundo"""
-  hello_world: String!
-
-  """Hola to (name)"""
-  hello_to(to: String): String!
   findAll: [Ticket!]!
+  findTicketById(id: String!): Ticket!
 }
 
 type Mutation {

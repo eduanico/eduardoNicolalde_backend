@@ -9,7 +9,7 @@ export const initDb = (async () => {
   const statements = [
     // Clear any existing data
     'DROP TABLE IF EXISTS healthcheck',
-
+    'DROP TABLE IF EXISTS ticket',
     // CREATE the healthchecks table
     'CREATE TABLE healthcheck (id INT NOT NULL, state INT NULL)',
     // INSERT a row into the healthchecks table

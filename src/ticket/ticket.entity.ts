@@ -8,7 +8,7 @@ import { PriorityEnum } from './enums/priority.enum';
 @Entity()
 export class Ticket {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('rowid')
   id: string;
 
   @Column()

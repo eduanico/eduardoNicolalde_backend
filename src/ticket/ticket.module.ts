@@ -6,6 +6,7 @@ import { Ticket } from './ticket.entity';
 
 @Module({
   imports:[TypeOrmModule.forFeature([Ticket])],
-  providers: [TicketResolver, TicketService]
+  providers: [TicketResolver, TicketService],
+  exports: [TicketService]
 })
 export class TicketModule {}

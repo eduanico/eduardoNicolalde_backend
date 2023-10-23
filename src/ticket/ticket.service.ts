@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateTicketInput } from './dto/create-ticket.input';
 import { CategoryEnum } from './enums/category.enum';
 import { StatusEnum } from './enums/status.enum';
+import { UpdateDTO } from 'src/kafka/dto/updateDTO';
 
 @Injectable()
 export class TicketService {
@@ -13,8 +14,29 @@ export class TicketService {
     private ticketRepository: Repository<Ticket>,
   ) {}
 
-  async createTicket(ticket: CreateTicketInput): Promise<Ticket> {
-    const newTicket = await this.ticketRepository.create(ticket);
+   async updateStatus(updateDTO: UpdateDTO): Promise<any> {
+    try {
+      const savedTicket = await this.ticketRepository.update({
+        id: updateDTO.id
+      },{
+        status: updateDTO.status
+      })
+      console.log('todo bien');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async findTicketById(id: string) {
+    return await this.ticketRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  createTicket(ticket: CreateTicketInput): Promise<Ticket> {
+    const newTicket = this.ticketRepository.create(ticket);
 
     let pathParam;
     switch (ticket.category) {

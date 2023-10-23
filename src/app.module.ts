@@ -8,6 +8,7 @@ import { TicketModule } from './ticket/ticket.module';
 import { StatusModule } from './status/status.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { KafkaModule } from './kafka/kafka.module';
 require('dotenv').config();
 
 @Module({
@@ -28,7 +29,8 @@ require('dotenv').config();
       // synchronize:true
     }),
     TicketModule,
-    StatusModule
+    StatusModule,
+    KafkaModule
   ],
   controllers: [AppController],
   providers: [AppService],
