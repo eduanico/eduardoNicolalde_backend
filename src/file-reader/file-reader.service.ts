@@ -34,14 +34,12 @@ export class FileReaderService {
 
   validateData(dataArray: Data[]) {
     dataArray.map((data: Data, index) => {
-      if (index != dataArray.length - 1) {
-        this.validateCsvData(data, index);
-      }
+      this.validateCsvData(data, index);
     });
   }
 
   validateId(id: any, index: number) {
-    if (!Number.isInteger(Number(id)) || !id || Number(id) == 0) {
+    if (!Number.isInteger(Number(id)) || !id) {
       console.log('Id inválido:', id, ', en la fila:', index + 2);
       return;
     }

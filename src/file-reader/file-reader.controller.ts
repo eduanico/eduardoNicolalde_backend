@@ -55,7 +55,7 @@ export class FileReaderController {
     const parsedCsv = this.fileReaderService.parseCsvContent(content);
     console.log(parsedCsv);
     //Validar que el archivo no esté vacío
-    if (parsedCsv.length == 1) {
+    if (parsedCsv.length == 0) {
       console.log('file have no rows');
     }
     this.fileReaderService.validateData(parsedCsv);
