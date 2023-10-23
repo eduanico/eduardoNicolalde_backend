@@ -2,8 +2,8 @@ import { ObjectType, registerEnumType } from '@nestjs/graphql';
 
 ObjectType();
 export enum FileStatusEnum {
-  PENDING,
-  PROCESS,
+  PENDING = 'PENDING',
+  PROCESSED = 'PROCESSED',
 }
 
 registerEnumType(FileStatusEnum, {

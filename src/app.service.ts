@@ -4,7 +4,7 @@ import { initDb } from './cockroach_db/initdatabase.service';
 @Injectable()
 export class AppService {
   getHello(): string {
-    // initDb;
+    initDb;
     return 'Hello reviewers!';
   }
 }

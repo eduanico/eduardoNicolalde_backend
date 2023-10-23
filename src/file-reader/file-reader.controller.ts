@@ -1,19 +1,19 @@
 import {
+  Body,
   Controller,
-  FileTypeValidator,
   HttpException,
   HttpStatus,
-  ParseFilePipe,
   ParseFilePipeBuilder,
   Post,
+  Get,
   UploadedFile,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { FileReaderService, editFileName } from './file-reader.service';
-import { Data } from './data.class';
 
 @Controller('api/file-reader')
 @ApiTags('file-reader')
@@ -30,6 +30,7 @@ export class FileReaderController {
     }),
   )
   async uploadFile(
+    @Body(new ValidationPipe({ whitelist: true }))
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
@@ -46,8 +47,11 @@ export class FileReaderController {
     const csv = this.fileReaderService.getFileFromFileName(file.originalname);
     const content = this.fileReaderService.extractContentToString(csv);
     const parsedCsv = this.fileReaderService.parseCsvContent(content);
-    parsedCsv.map((item: Data) => {
-      console.log(item);
-    });
+    this.fileReaderService.validateData(parsedCsv);
+  }
+
+  @Get()
+  GetAllData() {
+    return this.fileReaderService.getAllData();
   }
 }

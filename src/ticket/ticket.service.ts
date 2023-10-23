@@ -7,7 +7,6 @@ import { CategoryEnum } from './enums/category.enum';
 import { StatusEnum } from './enums/status.enum';
 import { TicketFilterDTO } from './dto/ticket-filter.dto';
 import { UpdateDTO } from 'src/kafka/dto/updateDto.dto';
-import path from 'path';
 
 @Injectable()
 export class TicketService {

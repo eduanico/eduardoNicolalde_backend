@@ -1,4 +1,4 @@
 "id","balance","account","description","status","date"
-1,10.5,"INTERNAL","Descripción 1","asdada","2023-10-23T20:04:25.403Z"
-2,11.5,"PEOPLE","Descripción 2","PROCESSED","2023-10-23T20:04:25.403Z"
-3,12.5,"OPERATION","Descripción 3","PENDING","2023-10-23T20:04:25.403Z"
+1,1231,"INTERNAL","Descripción 1","PROCESSED","2023-10-23T20:04:25.403Z"
+"hola",12,"PEOPLE","Descripción 2","PROCESSED","2023-10-23T20:04:25.403Z"
+3,12,"OPERATION","Descripción 3","PENDING","2023-10-23T20:04:25.403Z"
