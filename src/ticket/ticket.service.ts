@@ -16,12 +16,12 @@ export class TicketService {
 
    async updateStatus(updateDTO: UpdateDTO): Promise<any> {
     try {
-      const savedTicket = await this.ticketRepository.update({
+      const updateRes = await this.ticketRepository.update({
         id: updateDTO.id
       },{
         status: updateDTO.status
       })
-      console.log('todo bien');
+      console.log('respuesta del update: ', updateRes);
     } catch (err) {
       console.log(err);
     }
