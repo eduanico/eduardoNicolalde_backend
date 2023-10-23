@@ -12,7 +12,8 @@ export class KafkaService {
   ) {}
   sendUpdateRequest(updateDto: UpdateDTO) {
     return this.kafka.emit('technical_support_tickets', {
-      updateDto,
+      id: updateDto.id,
+      status: updateDto.status,
     });
   }
   updateStatus(payload: UpdateDTO): any {

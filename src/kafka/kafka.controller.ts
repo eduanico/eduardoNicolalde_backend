@@ -8,7 +8,6 @@ import {
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { KafkaService } from './kafka.service';
 import { UpdateDTO } from './dto/updateDto.dto';
-import { PayloadDTO } from './dto/payloadDto.dto';
 
 @Controller('api')
 export class KafkaController {
@@ -16,8 +15,8 @@ export class KafkaController {
 
   //ejercicio 2
   @MessagePattern('technical_support_tickets')
-  updateStatus(@Payload() payload: PayloadDTO): any {
-    return this.kafkaService.updateStatus(payload.updateDto);
+  updateStatus(@Payload() payload: UpdateDTO): any {
+    return this.kafkaService.updateStatus(payload);
   }
 
   //ejercicio 2
