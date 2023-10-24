@@ -4,7 +4,7 @@
 
 ## Description
 
-Test repository using Graphql, Nestjs, Kafka, Cockroachdb.
+Proyect using Graphql, Nestjs, Kafka, Cockroachdb.
 
 ## Installation
 
