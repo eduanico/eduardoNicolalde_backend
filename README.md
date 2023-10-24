@@ -1,7 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
 ## Description
 
 Proyect using Graphql, Nestjs, Kafka, Cockroachdb.
@@ -29,12 +25,29 @@ $ npm run start:dev
 Shows the status of the services
 
 If no id is sent it show all status in an array
+
 ```http
 GET /api/status
 ```
-As follow:
 
-![Alt text](image.png)
+Response:
+
+```json
+[
+  {
+    "id": 1,
+    "status": 604
+  },
+  {
+    "id": 2,
+    "status": 606
+  },
+  {
+    "id": 3,
+    "status": 607
+  }
+]
+```
 
 Send an id to check the service status
 
@@ -42,28 +55,55 @@ Send an id to check the service status
 GET /api/status/{id}
 ```
 
-![Alt text](image-1.png)
+Response:
+
+```json
+{
+  "id": 1,
+  "status": 604
+}
+```
 
 If service id is not found, it will return `607` by default.
 
-## Exercise 2 - Create Ticket
+If id is not numeric, bad request will be shown:
 
+```json
+{
+  "message": "Validation failed (numeric string is expected)",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+## Exercise 2 - Create Ticket
 
 Graphql mutation createTicket
 
 ```http
 POST /graphql
 ```
+
+For more information: `schema.gql`
+
+Category enums: INCIDENT | SUPPORT | ERROR
+Priority enums: HIGH | MEDIUM | LOW
+Status enums: PENDING | VERIFIED | APPROVED | REJECTED
+
+Status will always be created in `PENDING` as docs indicates
+
 Example of post in mutation createTicket:
 
 ``` graphql
 mutation CreateTicket {
-  createTicket(ticketInput: {
-    title: "Error ticket",
-    description: "test description",
-    category: ERROR,
-    priority: HIGH,
-  }) {
+  createTicket(
+    ticketInput: {
+      title: "Error ticket"
+      description: "test description"
+      category: ERROR
+      priority: HIGH
+    }
+  ) {
     category
     createdAt
     description
@@ -79,14 +119,14 @@ Using Apollo Server
 
 Response will be:
 
-```javascript
+``` json
 {
   "data": {
     "createTicket": {
       "category": "ERROR",
-      "createdAt": "2023-10-24T19:49:52.642Z",
+      "createdAt": "2023-10-24T20:48:20.799Z",
       "description": "test description",
-      "id": "911240700688760833",
+      "id": "911252196280565761",
       "priority": "HIGH",
       "status": "PENDING",
       "title": "Error ticket"
@@ -95,17 +135,43 @@ Response will be:
 }
 ```
 
+This will trigger a call for endpoint status/1 GET in exercise 1, this response will be send to kafka in order to emit an update to the ticket status from pending to -> rejected if it's error sending param 3; verified if it's incident sending param 1 and finally approved if it's support sending param 2.
+
+This all will be automatically updated within few seconds.
+
+After update using kafka:
+
+``` json
+{
+  "data": {
+    "findTicket": {
+      "category": "ERROR",
+      "description": "test description",
+      "createdAt": "2023-10-24T20:48:20.799Z",
+      "id": "911252196280565761",
+      "priority": "HIGH",
+      "status": "REJECTED",
+      "title": "Error ticket"
+    }
+  }
+}
+```
+
+## Exercise 3 - Find Ticket
+
+
+
 ## Status Codes
 
 Returns the following status codes in the API:
 
-| Status Code | Description |
-| :--- | :--- |
-| 200 | `OK` |
-| 201 | `CREATED` |
-| 400 | `BAD REQUEST` |
-| 404 | `NOT FOUND` |
-| 500 | `INTERNAL SERVER ERROR` |
+| Status Code | Description             |
+| :---------- | :---------------------- |
+| 200         | `OK`                    |
+| 201         | `CREATED`               |
+| 400         | `BAD REQUEST`           |
+| 404         | `NOT FOUND`             |
+| 500         | `INTERNAL SERVER ERROR` |
 
 ## Stay in touch
 

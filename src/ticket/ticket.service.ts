@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Ticket } from './ticket.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository, MoreThan } from 'typeorm';
@@ -8,12 +8,20 @@ import { StatusEnum } from './enums/status.enum';
 import { TicketFilterDTO } from './dto/ticket-filter.dto';
 import { UpdateDTO } from 'src/kafka/dto/updateDto.dto';
 import { GraphQLError } from 'graphql';
+import { HttpService } from '@nestjs/axios';
+import { StatusDTO } from 'src/status/status.class';
+import { catchError, firstValueFrom } from 'rxjs';
+import { UpdateStatusDTO } from 'src/kafka/dto/updateStatus.dto';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TicketService {
   constructor(
     @InjectRepository(Ticket)
     private ticketRepository: Repository<Ticket>,
+    @Inject('KAFKA')
+    private readonly kafka: ClientProxy,
+    private readonly httpService: HttpService,
   ) {}
 
   async updateStatus(payload: UpdateDTO): Promise<any> {
@@ -41,14 +49,11 @@ export class TicketService {
     });
     console.log(ticket);
     if (ticket == null)
-      throw new GraphQLError(
-        'Ticket no encontrado con id: ' + id,
-        {
-          extensions: {
-            code: 'TICKET_NOT_FOUND',
-          },
+      throw new GraphQLError('Ticket no encontrado con id: ' + id, {
+        extensions: {
+          code: 'TICKET_NOT_FOUND',
         },
-      );
+      });
     return ticket;
   }
 
@@ -70,8 +75,48 @@ export class TicketService {
     console.log(pathParam);
     newTicket.status = StatusEnum.PENDING;
     //send pathparam to api-fake
-
+    const data = this.updateTicketKafka(pathParam);
+    data.then((statusDto) => {
+      console.log(statusDto);
+      this.sendUpdateRequest({
+        id: newTicket.id,
+        status: statusDto.status,
+      });
+    });
     return this.ticketRepository.save(newTicket);
+  }
+
+  sendUpdateRequest(updateStatus: UpdateStatusDTO) {
+    let ticketStatus = 'pending';
+    switch (updateStatus.status) {
+      case 604:
+        ticketStatus = 'verified';
+        break;
+      case 606:
+        ticketStatus = 'approved';
+        break;
+      case 607:
+        ticketStatus = 'rejected';
+        break;
+    }
+    console.log('sending kafka...', updateStatus.id, ticketStatus);
+    return this.kafka.emit('technical_support_tickets', {
+      id: updateStatus.id,
+      status: ticketStatus,
+    });
+  }
+
+  async updateTicketKafka(pathParam: number) {
+    const { data } = await firstValueFrom(
+      this.httpService
+        .get<StatusDTO>('http://localhost:3000/api/status/' + pathParam)
+        .pipe(
+          catchError(() => {
+            throw 'An error happened!';
+          }),
+        ),
+    );
+    return data;
   }
 
   //Pending err handler
