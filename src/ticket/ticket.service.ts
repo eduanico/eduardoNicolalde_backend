@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Ticket } from './ticket.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Repository, MoreThan } from 'typeorm';
+import { Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 import { CreateTicketInput } from './dto/create-ticket.input';
 import { CategoryEnum } from './enums/category.enum';
 import { StatusEnum } from './enums/status.enum';
@@ -130,8 +130,8 @@ export class TicketService {
     if (args.category) query.where({ category: args.category });
     if (args.priority) query.where({ priority: args.priority });
     if (args.status) query.where({ status: args.status });
-    if (args.start) query.where({ createdAt: MoreThan(args.start) });
-    if (args.end) query.where({ createdAt: LessThan(args.end) });
+    if (args.start) query.where({ createdAt: MoreThanOrEqual(args.start) });
+    if (args.end) query.where({ createdAt: LessThanOrEqual(args.end) });
 
     query.skip(args.skip);
     query.take(args.limit);
