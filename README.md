@@ -177,7 +177,7 @@ query FindTicket {
 
 Response:
 
-```graphql
+```json
 {
   "data": {
     "findTicket": {
