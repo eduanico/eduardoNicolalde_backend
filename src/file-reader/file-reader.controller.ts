@@ -21,6 +21,7 @@ import { FileReaderService, editFileName } from './file-reader.service';
 export class FileReaderController {
   constructor(private fileReaderService: FileReaderService) {}
 
+  //ejercicio 5
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -48,17 +49,17 @@ export class FileReaderController {
     //Validar que el archivo no esté vacío
     if (file.size == 1) {
       console.log('file must not be empty');
-      return;
+      throw new HttpException('El archivo no debe estar vacío', HttpStatus.BAD_REQUEST);
     }
     const csv = this.fileReaderService.getFileFromFileName(file.originalname);
     const content = this.fileReaderService.extractContentToString(csv);
     const parsedCsv = this.fileReaderService.parseCsvContent(content);
-    console.log(parsedCsv);
-    //Validar que el archivo no esté vacío
+    //Validar que el archivo tenga filas
     if (parsedCsv.length == 0) {
       console.log('file have no rows');
+      throw new HttpException('El archivo no tiene contenido', HttpStatus.BAD_REQUEST);
     }
-    this.fileReaderService.validateData(parsedCsv);
+    return this.fileReaderService.validateData(parsedCsv);
   }
 
   @Get()

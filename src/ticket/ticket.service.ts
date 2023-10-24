@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Ticket } from './ticket.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository, MoreThan } from 'typeorm';
@@ -7,6 +7,7 @@ import { CategoryEnum } from './enums/category.enum';
 import { StatusEnum } from './enums/status.enum';
 import { TicketFilterDTO } from './dto/ticket-filter.dto';
 import { UpdateDTO } from 'src/kafka/dto/updateDto.dto';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class TicketService {
@@ -32,12 +33,23 @@ export class TicketService {
   }
 
   //Pending err handler when not found
-  async findTicketById(id: string) {
-    return await this.ticketRepository.findOne({
+  async findTicketById(id: string): Promise<any> {
+    const ticket = await this.ticketRepository.findOne({
       where: {
         id,
       },
     });
+    console.log(ticket);
+    if (ticket == null)
+      throw new GraphQLError(
+        'Ticket no encontrado con id: ' + id,
+        {
+          extensions: {
+            code: 'TICKET_NOT_FOUND',
+          },
+        },
+      );
+    return ticket;
   }
 
   createTicket(ticket: CreateTicketInput): Promise<Ticket> {

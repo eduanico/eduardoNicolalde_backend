@@ -4,6 +4,7 @@ import { TicketService } from './ticket.service';
 import { CreateTicketInput } from './dto/create-ticket.input';
 import { TicketFilterDTO } from './dto/ticket-filter.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { GraphQLError } from 'graphql';
 
 @Resolver()
 export class TicketResolver {
@@ -21,17 +22,9 @@ export class TicketResolver {
   }
 
   //ejercicio 3
-  @Query(() => Ticket)
+  @Query(()=> Ticket)
   async findTicket(@Args('id', { type: () => String }) id: string) {
-    return await this.ticketService.findTicketById(id).catch((err) => {
-      console.log(err);
-      throw new HttpException(
-        {
-          message: err.message,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    });
+      return await this.ticketService.findTicketById(id);
   }
 
   //ejercicio 4
