@@ -1,30 +1,6 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Proyect using Graphql, Nestjs, Kafka, Cockroachdb.
 
 ## Installation
 
@@ -34,40 +10,170 @@ $ npm install
 
 ## Running the app
 
+Backend will run in PORT `3000` by default.
+
 ```bash
 # development
 $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+## Exercise 1 - Fetch Status
 
-```bash
-# unit tests
-$ npm run test
+Shows the status of the services
 
-# e2e tests
-$ npm run test:e2e
+If no id is sent it show all status in an array
 
-# test coverage
-$ npm run test:cov
+```http
+GET /api/status
 ```
 
-## Support
+Response:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```json
+[
+  {
+    "id": 1,
+    "status": 604
+  },
+  {
+    "id": 2,
+    "status": 606
+  },
+  {
+    "id": 3,
+    "status": 607
+  }
+]
+```
+
+Send an id to check the service status
+
+```http
+GET /api/status/{id}
+```
+
+Response:
+
+```json
+{
+  "id": 1,
+  "status": 604
+}
+```
+
+If service id is not found, it will return `607` by default.
+
+If id is not numeric, bad request will be shown:
+
+```json
+{
+  "message": "Validation failed (numeric string is expected)",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+## Exercise 2 - Create Ticket
+
+Graphql mutation createTicket
+
+```http
+POST /graphql
+```
+
+For more information: `schema.gql`
+
+Category enums: INCIDENT | SUPPORT | ERROR
+Priority enums: HIGH | MEDIUM | LOW
+Status enums: PENDING | VERIFIED | APPROVED | REJECTED
+
+Status will always be created in `PENDING` as docs indicates
+
+Example of post in mutation createTicket:
+
+``` graphql
+mutation CreateTicket {
+  createTicket(
+    ticketInput: {
+      title: "Error ticket"
+      description: "test description"
+      category: ERROR
+      priority: HIGH
+    }
+  ) {
+    category
+    createdAt
+    description
+    id
+    priority
+    status
+    title
+  }
+}
+```
+
+Using Apollo Server
+
+Response will be:
+
+``` json
+{
+  "data": {
+    "createTicket": {
+      "category": "ERROR",
+      "createdAt": "2023-10-24T20:48:20.799Z",
+      "description": "test description",
+      "id": "911252196280565761",
+      "priority": "HIGH",
+      "status": "PENDING",
+      "title": "Error ticket"
+    }
+  }
+}
+```
+
+This will trigger a call for endpoint status/1 GET in exercise 1, this response will be send to kafka in order to emit an update to the ticket status from pending to -> rejected if it's error sending param 3; verified if it's incident sending param 1 and finally approved if it's support sending param 2.
+
+This all will be automatically updated within few seconds.
+
+After update using kafka:
+
+``` json
+{
+  "data": {
+    "findTicket": {
+      "category": "ERROR",
+      "description": "test description",
+      "createdAt": "2023-10-24T20:48:20.799Z",
+      "id": "911252196280565761",
+      "priority": "HIGH",
+      "status": "REJECTED",
+      "title": "Error ticket"
+    }
+  }
+}
+```
+
+## Exercise 3 - Find Ticket
+
+
+
+## Status Codes
+
+Returns the following status codes in the API:
+
+| Status Code | Description             |
+| :---------- | :---------------------- |
+| 200         | `OK`                    |
+| 201         | `CREATED`               |
+| 400         | `BAD REQUEST`           |
+| 404         | `NOT FOUND`             |
+| 500         | `INTERNAL SERVER ERROR` |
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Author - [Eduardo Nicolalde](https://www.linkedin.com/in/eduardo-nicolalde/)
+- Website - [https://eduardo-nicolalde.vercel.app](https://nestjs.com/)

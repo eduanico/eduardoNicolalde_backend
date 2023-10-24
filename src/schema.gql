@@ -1,0 +1,64 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Ticket {
+  id: ID!
+  title: String!
+  description: String!
+  priority: PriorityEnum!
+  category: CategoryEnum!
+  status: StatusEnum!
+  createdAt: DateTime!
+}
+
+enum PriorityEnum {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum CategoryEnum {
+  INCIDENT
+  SUPPORT
+  ERROR
+}
+
+enum StatusEnum {
+  PENDING
+  VERIFIED
+  APPROVED
+  REJECTED
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  findAll: [Ticket!]!
+  findTicket(id: String!): Ticket!
+  searchTickets(args: TicketFilterDTO!): [Ticket!]!
+}
+
+input TicketFilterDTO {
+  start: DateTime
+  end: DateTime
+  priority: PriorityEnum
+  category: CategoryEnum
+  status: StatusEnum
+  skip: Int = 0
+  limit: Int = 10
+}
+
+type Mutation {
+  createTicket(ticketInput: CreateTicketInput!): Ticket!
+}
+
+input CreateTicketInput {
+  title: String!
+  description: String
+  priority: PriorityEnum!
+  category: CategoryEnum!
+}
