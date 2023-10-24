@@ -17,14 +17,14 @@ export class TicketResolver {
 
   //ejercicio 2
   @Mutation(() => Ticket)
-  createPost(@Args('ticketInput') ticketInput: CreateTicketInput) {
+  createTicket(@Args('ticketInput') ticketInput: CreateTicketInput) {
     return this.ticketService.createTicket(ticketInput);
   }
 
   //ejercicio 3
-  @Query(()=> Ticket)
+  @Query(() => Ticket)
   async findTicket(@Args('id', { type: () => String }) id: string) {
-      return await this.ticketService.findTicketById(id);
+    return await this.ticketService.findTicketById(id);
   }
 
   //ejercicio 4
