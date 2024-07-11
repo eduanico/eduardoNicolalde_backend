@@ -289,5 +289,5 @@ Returns the following status codes in the API:
 ## Stay in touch
 
 - Author - [Eduardo Nicolalde](https://www.linkedin.com/in/eduardo-nicolalde/)
-- Website - [https://eduardo-nicolalde.vercel.app](https://nestjs.com/)
+- Website - [https://eduardo-nicolalde.vercel.app](https://eduardo-nicolalde.vercel.app)
 ````
